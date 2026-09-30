@@ -24,6 +24,7 @@ import {
 } from "../../hooks/useFriendQueries";
 import { useOpenChat } from "../../hooks/useChatQueries";
 import { Avatar } from "../../components/Avatar";
+import { ScreenLoader } from "../../components/Loader";
 
 export default function DiscoverScreen() {
   const [search, setSearch] = useState("");
@@ -97,10 +98,7 @@ export default function DiscoverScreen() {
 
       {tab === "people" ? (
         isLoading && !users.length ? (
-          <ActivityIndicator
-            color={Colors.textPrimary}
-            style={{ marginTop: 32 }}
-          />
+          <ScreenLoader />
         ) : (
           <FlatList
             data={users}
@@ -133,10 +131,7 @@ export default function DiscoverScreen() {
           />
         )
       ) : friendsLoading ? (
-        <ActivityIndicator
-          color={Colors.textPrimary}
-          style={{ marginTop: 32 }}
-        />
+        <ScreenLoader />
       ) : (
         <FlatList
           data={friends}

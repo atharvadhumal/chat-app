@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
 import { router, Stack } from "expo-router";
 import { Colors } from "../constants/colors";
 import { EmptyState } from "../components/EmptyState";
+import { ScreenLoader } from "../components/Loader";
 import {
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
@@ -85,10 +85,7 @@ export default function NotificationsScreen() {
       />
 
       {isLoading ? (
-        <ActivityIndicator
-          color={Colors.textPrimary}
-          style={{ marginTop: 40 }}
-        />
+        <ScreenLoader />
       ) : (
         <FlatList
           data={notifications}

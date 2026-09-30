@@ -1,4 +1,5 @@
 import { Colors } from "../../constants/colors";
+import { APP_NAME } from "../../constants/app";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -89,7 +90,7 @@ const SignUpScreen = () => {
                 marginTop: 6,
               }}
             >
-              Sign Up to start Chatting
+              Join {APP_NAME} and start chatting
             </Text>
           </View>
 

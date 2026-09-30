@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
@@ -12,6 +11,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { Colors } from "../../constants/colors";
+import { APP_NAME } from "../../constants/app";
 import { useAuth } from "../../contexts/auth-context";
 import { Avatar } from "../../components/Avatar";
 import { useFriends } from "../../hooks/useFriendQueries";
@@ -19,6 +19,7 @@ import { useConversations, useOpenChat } from "../../hooks/useChatQueries";
 import { useUnreadNotificationCount } from "../../hooks/useNotificationQueries";
 import { userService } from "../../services/notification.service";
 import { AvatarPickerModal } from "../../components/AvatarPickerModal";
+import { DotsLoader } from "../../components/Loader";
 import { useQueryClient } from "@tanstack/react-query";
 import { USER_KEYS } from "../../hooks/useFriendQueries";
 import { CHAT_KEYS } from "../../hooks/useChatQueries";
@@ -221,7 +222,7 @@ export default function ProfileScreen() {
         </View>
 
         {friendsLoading ? (
-          <ActivityIndicator color={Colors.textMuted} style={{ marginTop: 12 }} />
+          <DotsLoader size={6} color={Colors.textMuted} style={{ marginTop: 16 }} />
         ) : recentFriends.length === 0 ? (
           <Pressable
             style={styles.emptyFriends}
@@ -323,7 +324,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <Text style={styles.footer}>Chat · private messaging</Text>
+      <Text style={styles.footer}>{APP_NAME} · private messaging</Text>
     </ScrollView>
 
     <AvatarPickerModal

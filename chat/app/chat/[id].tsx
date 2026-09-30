@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors";
 import { MessageBubble } from "../../components/MessageBubble";
 import { EmptyState } from "../../components/EmptyState";
+import { ScreenLoader } from "../../components/Loader";
 import { useAuth } from "../../contexts/auth-context";
 import { useSocket } from "../../contexts/socket-context";
 import { useMessages, useSendMessage } from "../../hooks/useChatQueries";
@@ -102,10 +103,7 @@ export default function ChatThreadScreen() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 0}
       >
         {isLoading ? (
-          <ActivityIndicator
-            color={Colors.textPrimary}
-            style={{ marginTop: 40 }}
-          />
+          <ScreenLoader />
         ) : (
           <FlatList
             ref={listRef}

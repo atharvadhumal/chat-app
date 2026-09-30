@@ -4,9 +4,12 @@ import { AuthProvider, useAuth } from "../contexts/auth-context";
 import { SocketProvider } from "../contexts/socket-context";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../utils/query-client";
+import { useEffect, useState } from "react";
 import { Colors } from "../constants/colors";
-import { ActivityIndicator, View } from "react-native";
+import { AppLoader } from "../components/Loader";
 import { usePushNotifications } from "../hooks/usePushNotifications";
+
+const MIN_LOADER_MS = 900;
 
 export default function RootLayout() {
   return (
@@ -25,20 +28,15 @@ function Layout() {
   const { user, isLoading } = useAuth();
   usePushNotifications();
   const isLoggedIn = !!user;
+  const [minElapsed, setMinElapsed] = useState(false);
 
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: Colors.background,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator color={Colors.textPrimary} />
-      </View>
-    );
+  useEffect(() => {
+    const id = setTimeout(() => setMinElapsed(true), MIN_LOADER_MS);
+    return () => clearTimeout(id);
+  }, []);
+
+  if (isLoading || !minElapsed) {
+    return <AppLoader />;
   }
 
   return (

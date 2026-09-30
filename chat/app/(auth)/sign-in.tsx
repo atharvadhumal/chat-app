@@ -1,4 +1,5 @@
 import { Colors } from "../../constants/colors";
+import { APP_NAME } from "../../constants/app";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -88,7 +89,7 @@ const SignInScren = () => {
                 marginTop: 6,
               }}
             >
-              Sign in to continue chatting
+              Sign in to continue to {APP_NAME}
             </Text>
           </View>
 

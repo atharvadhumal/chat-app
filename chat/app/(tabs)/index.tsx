@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   StyleSheet,
@@ -14,6 +13,7 @@ import { useConversations } from "../../hooks/useChatQueries";
 import { useUnreadNotificationCount } from "../../hooks/useNotificationQueries";
 import { ConversationRow } from "../../components/ConversationRow";
 import { EmptyState } from "../../components/EmptyState";
+import { ScreenLoader } from "../../components/Loader";
 
 export default function ChatsScreen() {
   const navigation = useNavigation();
@@ -49,10 +49,7 @@ export default function ChatsScreen() {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <ActivityIndicator
-          color={Colors.textPrimary}
-          style={{ marginTop: 40 }}
-        />
+        <ScreenLoader />
       ) : (
         <FlatList
           data={conversations}
