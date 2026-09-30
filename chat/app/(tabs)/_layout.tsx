@@ -3,18 +3,19 @@ import { Colors } from "../../constants/colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
+        tabBarActiveTintColor: Colors.textPrimary,
         tabBarInactiveTintColor: Colors.textMuted,
         tabBarStyle: {
           backgroundColor: Colors.surface,
           borderTopColor: Colors.border,
-          borderTopWidth: 0.5,
+          borderTopWidth: 1,
           height:
             56 +
             (Platform.OS === "android"
@@ -33,8 +34,9 @@ export default function TabsLayout() {
         headerShadowVisible: false,
         headerTitleStyle: {
           fontSize: 20,
-          fontWeight: 700,
+          fontWeight: "700",
         },
+        sceneStyle: { backgroundColor: Colors.background },
       }}
     >
       <Tabs.Screen
@@ -46,17 +48,15 @@ export default function TabsLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
         name="discover"
         options={{
           title: "Discover",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
+            <Ionicons name="compass-outline" size={size} color={color} />
           ),
         }}
       />
-
       <Tabs.Screen
         name="profile"
         options={{

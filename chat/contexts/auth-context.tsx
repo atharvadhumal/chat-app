@@ -22,7 +22,8 @@ interface AuthContextType {
     password: string,
   ) => Promise<string | null>;
   signOut: () => Promise<void>;
-  getCookie: () => string;
+  updateAvatar: (image: string) => Promise<string | null>;
+  getCookie: () => string | Promise<string>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -32,6 +33,7 @@ const AuthContext = createContext<AuthContextType>({
   signIn: async () => null,
   signUp: async () => null,
   signOut: async () => {},
+  updateAvatar: async () => null,
   getCookie: () => "",
 });
 
@@ -80,16 +82,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
   ): Promise<string | null> => {
     try {
+      const { generateRandomAvatar } = await import("../utils/avatars");
+      const avatar = generateRandomAvatar();
+
       const { data, error } = await authClient.signUp.email({
         name,
         email,
         password,
-      });
+        image: avatar.url,
+      } as any);
 
       console.log("Sign up response:", { data, error });
 
       if (error) {
         return error.message ?? "Sign up failed";
+      }
+
+      // Ensure image is persisted even if sign-up payload ignored it
+      try {
+        const { userService } = await import("../services/notification.service");
+        await userService.updateAvatar(avatar.url);
+      } catch {
+        // user may not be fully sessioned yet — ignore
       }
 
       return null;
@@ -102,11 +116,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await authClient.signOut();
   };
 
+  const updateAvatar = async (image: string): Promise<string | null> => {
+    try {
+      const { userService } = await import("../services/notification.service");
+      await userService.updateAvatar(image);
+
+      // Keep Better Auth session in sync when supported
+      try {
+        await authClient.updateUser({ image });
+      } catch {
+        // ignore — DB already updated
+      }
+
+      await authClient.getSession();
+      return null;
+    } catch (error) {
+      return error instanceof Error ? error.message : "Failed to update avatar";
+    }
+  };
+
   const getCookie = () => authClient.getCookie() ?? "";
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isLoading, signIn, signUp, signOut, getCookie }}
+      value={{
+        user,
+        token,
+        isLoading,
+        signIn,
+        signUp,
+        signOut,
+        updateAvatar,
+        getCookie,
+      }}
     >
       {children}
     </AuthContext.Provider>

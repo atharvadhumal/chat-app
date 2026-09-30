@@ -63,13 +63,15 @@ const SignUpScreen = () => {
                 width: 72,
                 height: 72,
                 borderRadius: 20,
-                backgroundColor: Colors.primary,
+                backgroundColor: Colors.card,
+                borderWidth: 1,
+                borderColor: Colors.borderLight,
                 justifyContent: "center",
                 alignItems: "center",
                 marginBottom: 16,
               }}
             >
-              <Ionicons name="chatbubbles" size={36} color="#fff" />
+              <Ionicons name="chatbubbles" size={36} color={Colors.textPrimary} />
             </View>
             <Text
               style={{
@@ -228,11 +230,11 @@ const SignUpScreen = () => {
             })}
           >
             {loading ? (
-              <ActivityIndicator color={"#fff"} />
+              <ActivityIndicator color={Colors.background} />
             ) : (
               <Text
                 style={{
-                  color: "#fff",
+                  color: Colors.background,
                   fontSize: 16,
                   fontWeight: "700",
                 }}
@@ -256,7 +258,7 @@ const SignUpScreen = () => {
               <Pressable>
                 <Text
                   style={{
-                    color: Colors.primaryLight,
+                    color: Colors.textPrimary,
                     fontSize: 14,
                     fontWeight: "600",
                   }}

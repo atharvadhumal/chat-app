@@ -6,7 +6,7 @@ import { expo } from "@better-auth/expo";
 export const auth = betterAuth({
   plugins: [expo()],
   database: prismaAdapter(prisma, {
-    provider: "postgresql", // or "mysql", "sqlite", ...etc
+    provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,

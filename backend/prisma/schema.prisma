@@ -6,18 +6,13 @@ datasource db {
   provider = "postgresql"
 }
 
-model Test {
-  id          String @id @default(cuid())
-  name        String
-  description String
-}
-
 model User {
   id            String    @id
   name          String
   email         String
   emailVerified Boolean   @default(false)
   image         String?
+  pushToken     String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
@@ -27,6 +22,11 @@ model User {
   friendRequestReceived FriendRequest[] @relation("FriendRequestsReceived")
   friends               Friend[]        @relation("Friends1")
   friendsOf             Friend[]        @relation("Friends2")
+
+  conversationsAsUser1 Conversation[] @relation("ConversationUser1")
+  conversationsAsUser2 Conversation[] @relation("ConversationUser2")
+  messages             Message[]
+  notifications        Notification[]
 
   @@unique([email])
   @@map("user")
@@ -121,4 +121,69 @@ enum FriendRequestStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+}
+
+model Conversation {
+  id String @id @default(cuid())
+
+  userId1 String
+  userId2 String
+
+  user1 User @relation("ConversationUser1", fields: [userId1], references: [id], onDelete: Cascade)
+  user2 User @relation("ConversationUser2", fields: [userId2], references: [id], onDelete: Cascade)
+
+  lastMessageAt   DateTime?
+  lastMessageText String?
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId1, userId2])
+  @@index([userId1])
+  @@index([userId2])
+  @@index([lastMessageAt])
+}
+
+model Message {
+  id String @id @default(cuid())
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  content String
+  readAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+model Notification {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type  NotificationType
+  title String
+  body  String
+  data  Json?
+  read  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, read])
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  MESSAGE
 }
